@@ -1,0 +1,43 @@
+{
+   "manifest_version": 3,
+   "name": "AquaTrack",
+   "version": "1.0",
+   "description": "Track your daily water intake and set reminders to stay hydrated throughout the day.",
+ 
+   "action": {
+     "default_icon": "src/assets/icon.png",
+     "default_popup": "src/popup.html",
+     "default_title": "Track your water intake!"
+   },
+ 
+   "background": {
+     "service_worker": "src/background.js",
+     "type": "module"
+   },
+ 
+   "permissions": [
+     "storage",
+     "unlimitedStorage",
+     "notifications",
+     "alarms"
+   ],
+
+ 
+   "options_page": "src/settings.html",
+ 
+   "content_security_policy": {
+     "extension_pages": "script-src 'self'; object-src 'self'"
+   },
+ 
+   "short_name": "AquaTrack",
+   "update_url": "https://clients2.google.com/service/update2/crx",
+ 
+   "author": "Ajmal Nasumudeen",
+ 
+   "commands": {
+     "_execute_action": {
+       "description": "Open the AquaTrack popup"
+     }
+   }
+ }
+ 
