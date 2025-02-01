@@ -1,6 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
   console.log("Popup script loaded");
-
+  if (typeof flatpickr !== "undefined") {
+    flatpickr("#date-picker", {
+        dateFormat: "m/d/Y",
+        onChange: function (selectedDates) {
+            const selectedDate = selectedDates[0].toLocaleDateString();
+            loadIntakeForDate(selectedDate);
+        }
+    });
+} else {
+    console.error("Flatpickr is not loaded");
+}
   const form = document.getElementById("intake-form");
   const waterAmountInput = document.getElementById("water-amount");
   const totalIntakeElement = document.getElementById("total-intake");
@@ -9,21 +19,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const selectedDateIntakeElement = document.getElementById("intake-for-date");
   const selectedDateElement = document.getElementById("selected-date");
   const selectedDateSection = document.getElementById("selected-date-intake");
+  const progressBarFill = document.getElementById("progress-bar-fill");
 
-  const conversionFactor = 240; // 1 cup = 240 mL
+  const conversionFactor = 240;
   let totalIntake = 0;
-  let dailyGoal = 2000; // Default goal in mL
-  let unit = "mL"; // Default unit
+  let dailyGoal = 2000; 
+  let unit = "mL";
   const today = new Date().toLocaleDateString();
 
-  // Initialize Flatpickr calendar for selecting dates
-  flatpickr("#date-picker", {
-    dateFormat: "m/d/Y",
-    onChange: function (selectedDates) {
-      const selectedDate = selectedDates[0].toLocaleDateString();
-      loadIntakeForDate(selectedDate);
-    }
-  });
 
   // Load saved intake, goal, and unit on load
   chrome.storage.local.get(["waterIntakes", "dailyGoal", "unit"], function (data) {
@@ -87,6 +90,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     totalIntakeElement.textContent = `${displayIntake} ${unit}`;
     goalIntakeElement.textContent = `${displayGoal} ${unit}`;
+    let progressPercentage = Math.min((totalIntake / dailyGoal) * 100, 100); // Ensures max is 100%
+
+    // Update the progress bar width
+    if (progressBarFill) {
+      progressBarFill.style.width = `${progressPercentage}%`;
+    }
   }
 
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -100,5 +109,8 @@ document.addEventListener("DOMContentLoaded", function () {
         checkGoal();
       });
     }
+    if (request.action === "showAlert") {
+      alert(request.message);  
+  }
   });
 });

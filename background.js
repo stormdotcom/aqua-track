@@ -1,6 +1,33 @@
 console.log("Background script starting...");
 
 // Keep the service worker alive
+const titles = [
+    "Stay Hydrated! 💦",
+    "Hydration Check ✅",
+    "Time for a Water Break 🥤",
+    "Drink Up! 🚰",
+    "Keep Going! 🌊"
+];
+
+
+
+function printMessage(displayIntake, displayGoal, unit) {
+    const messages = [
+        `You're doing great! You've had ${displayIntake} ${unit} so far. Keep it up!`,
+        `Hydration is key! You've reached ${displayIntake} ${unit}, aim for ${displayGoal} ${unit}!`,
+        `Water is life! Stay on track with ${displayIntake} ${unit} out of ${displayGoal} ${unit}.`,
+        `Small sips make a big difference! You're at ${displayIntake} ${unit} so far.`,
+        `Time to refresh! You've had ${displayIntake} ${unit}, let's hit that ${displayGoal} ${unit} goal!`
+    ];
+    return messages[Math.floor(Math.random() * messages.length)];
+};
+
+chrome.runtime.onStartup.addListener(() => {
+    console.log("Extension restarted. Recreating alarms...");
+    createAlarm();
+    showNotification(); 
+});
+
 chrome.runtime.onInstalled.addListener(() => {
     console.log("Extension installed or updated");
     createAlarm();
@@ -39,7 +66,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         showNotification();
         sendResponse({ status: "Test notification sent" });
     }
-    return true; // Keeps the message channel open for asynchronous responses
+    return true;
 });
 
 function showNotification() {
@@ -64,17 +91,19 @@ function showNotification() {
             displayIntake = todayIntake;
             displayGoal = dailyGoal;
         }
-
+        const title = titles[Math.floor(Math.random() * titles.length)];
+        const message = printMessage(displayIntake, displayGoal, unit);
+        const messageText = `🚰 Time to drink water! You've had ${displayIntake} ${unit} out of ${displayGoal} ${unit}.`;
         const options = {
             type: "basic",
-            iconUrl: chrome.runtime.getURL("icon.png"),
-            title: "Water Reminder",
-            message: `Time to drink water! You've had ${displayIntake} ${unit} out of ${displayGoal} ${unit} today.`,
+            title,
+            iconUrl: chrome.runtime.getURL("src/assets/icon.png"),
+            message,
             buttons: [
                 { title: unit === "mL" ? "Add 250 mL" : "Add 1 cup" }
             ],
             priority: 2,
-            requireInteraction: true // Keep the notification visible until the user interacts
+            requireInteraction: true 
         };
 
         chrome.notifications.create("waterReminder", options, (notificationId) => {
@@ -84,6 +113,7 @@ function showNotification() {
                 console.log("Notification created:", notificationId);
             }
         });
+        chrome.runtime.sendMessage({ action: "showAlert", message: messageText });
     });
 }
 

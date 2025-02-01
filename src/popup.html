@@ -71,16 +71,16 @@
             <div class="flex justify-between mb-4">
                 <div>
                     <p class="text-sm text-gray-500">Today's Total</p>
-                    <p class="text-2xl font-extrabold text-blue-600">1200 mL</p>
+                    <p id="total-intake" class="text-2xl font-extrabold text-blue-600">0 mL</p>
                 </div>
                 <div>
                     <p class="text-sm text-gray-500">Daily Goal</p>
-                    <p class="text-2xl font-extrabold text-blue-600">2000 mL</p>
+                    <p id="goal-intake" class="text-2xl font-extrabold text-blue-600">2000 mL</p>
                 </div>
             </div>
             <!-- Progress Bar -->
             <div class="progress-bar">
-                <div class="progress-bar-fill"></div>
+                <div class="progress-bar-fill" id="progress-bar-fill" style="width: 0%;"></div>
             </div>
         </div>
 
@@ -120,7 +120,11 @@
         </div>
     </div>
 
+
+    <script src ="vendor/flatpickr.js"></script>
+    <script src ="vendor/tailwind.js"></script>
     <script src="darkmode.js"></script>
+    <script src="popup.js"></script>
 </body>
 
 </html>
