@@ -1,4 +1,4 @@
-console.log("Background script starting...");
+
 
 // Keep the service worker alive
 const titles = [
@@ -36,7 +36,6 @@ chrome.runtime.onInstalled.addListener(() => {
 
 // Event listener for alarms
 chrome.alarms.onAlarm.addListener((alarm) => {
-    console.log("Alarm fired:", alarm.name);
     if (alarm.name === "waterReminder") {
         showNotification();
     } else if (alarm.name === "keepAlive") {
@@ -51,13 +50,11 @@ function createAlarm() {
             delayInMinutes: interval,
             periodInMinutes: interval
         });
-        console.log(`Alarm created with interval: ${interval} minutes`);
     });
 }
 
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log("Message received in background:", request);
     if (request.action === "setAlarm") {
         createAlarm();
         sendResponse({ status: "Alarm set successfully" });
@@ -100,7 +97,7 @@ function showNotification() {
             iconUrl: chrome.runtime.getURL("src/assets/icon.png"),
             message,
             buttons: [
-                { title: unit === "mL" ? "Add 250 mL" : "Add 1 cup" }
+                { title: unit === "mL" ? "Add 200 mL" : "Add 1 cup" }
             ],
             priority: 2,
             requireInteraction: true 
@@ -156,4 +153,3 @@ function addWaterIntake() {
 }
 
 
-console.log("Background script loaded successfully");

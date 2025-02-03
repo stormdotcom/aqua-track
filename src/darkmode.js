@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // ... any other configuration options
     }
 
-    console.log('DOM fully loaded and parsed');
+
 
     const themeToggleBtn = "0" //document.getElementById('theme-toggle');
     const htmlElement = document.documentElement;
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    console.log('Theme toggle button found');
+
 
     // function setTheme(isDark) {
     //     console.log('Setting theme:', isDark ? 'dark' : 'light');

@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("Popup script loaded");
   if (typeof flatpickr !== "undefined") {
     flatpickr("#date-picker", {
         dateFormat: "m/d/Y",

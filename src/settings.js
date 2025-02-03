@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Reset water intake history
     resetHistoryButton.addEventListener("click", function () {
         chrome.storage.local.set({ waterIntakes: {} }, function () {
-            alert("History reset!");
+            alert("History Cleared!");
 
             // Optionally, send a message to update the popup UI
             chrome.runtime.sendMessage({ action: "historyReset" }, function (response) {
