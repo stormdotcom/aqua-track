@@ -107,7 +107,7 @@ function showNotification() {
             if (chrome.runtime.lastError) {
                 console.error("Notification creation failed:", chrome.runtime.lastError);
             } else {
-                console.log("Notification created:", notificationId);
+               
             }
         });
         chrome.runtime.sendMessage({ action: "showAlert", message: messageText });
@@ -131,7 +131,7 @@ function addWaterIntake() {
         let addAmount;
 
         if (unit === "mL") {
-            addAmount = 250; // Add 250 mL
+            addAmount = 200; // Add 250 mL
         } else if (unit === "cups") {
             addAmount = conversionFactor; // Add 240 mL for 1 cup
         }
