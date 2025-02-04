@@ -131,7 +131,7 @@ function addWaterIntake() {
         let addAmount;
 
         if (unit === "mL") {
-            addAmount = 200; // Add 250 mL
+            addAmount = 200; // Add 200 mL
         } else if (unit === "cups") {
             addAmount = conversionFactor; // Add 240 mL for 1 cup
         }
@@ -139,10 +139,13 @@ function addWaterIntake() {
         waterIntakes[today] = (waterIntakes[today] || 0) + addAmount;
         chrome.storage.local.set({ waterIntakes }, () => {
             console.log("Water intake updated:", waterIntakes[today]);
+
+            // Update Streak & Coins after adding water intake
+            updateStreakAndCoins();
+
             // Send message to update the popup UI, if it's open
             chrome.runtime.sendMessage({ action: "updateIntake" }, (response) => {
                 if (chrome.runtime.lastError) {
-                    // No receivers, ignore the error
                     console.warn("No receiver for updateIntake message:", chrome.runtime.lastError.message);
                 } else {
                     console.log("Message sent successfully:", response);
@@ -151,5 +154,70 @@ function addWaterIntake() {
         });
     });
 }
+
+function updateStreakAndCoins() {
+    chrome.storage.local.get(["streak", "lastHydrationDate", "coins", "waterIntakes", "startDate"], (data) => {
+        const today = new Date().toLocaleDateString();
+        let streak = data.streak || 0;
+        let lastHydrationDate = data.lastHydrationDate || null;
+        let coins = data.coins || 0;
+        let startDate = data.startDate || today; // Default to today if not set
+        const waterIntakes = data.waterIntakes || {};
+        const todayIntake = waterIntakes[today] || 0;
+
+        // Calculate "Days Passed" since first hydration
+        const startDateObj = new Date(startDate);
+        const todayDateObj = new Date();
+        const timeDiff = todayDateObj - startDateObj;
+        const daysPassed = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) + 1; // +1 to include today
+
+        // Check if the user drank water today
+        if (todayIntake > 0) {
+            // If lastHydrationDate is yesterday, increase streak
+            if (lastHydrationDate === getYesterdayDate()) {
+                streak += 1;
+            } else if (lastHydrationDate !== today) {
+                // If the last hydration date is not yesterday and not today, reset streak
+                streak = 1;
+            }
+
+            // Reward coins: 10 coins for each streak day
+            coins += 10;
+
+            // Save updated values
+            chrome.storage.local.set({ 
+                streak, 
+                lastHydrationDate: today, 
+                coins,
+                startDate // Ensure startDate is saved
+            }, () => {
+                console.log(`📅 Streak: ${streak}, Coins: ${coins}, Days Passed: ${daysPassed}, Start Date: ${startDate}`);
+
+                // ✅ Update the UI dynamically
+                document.getElementById("streak-value").innerText = streak;
+                document.getElementById("coins-value").innerText = coins;
+                document.getElementById("total-intake-card").innerText = todayIntake + " mL"; 
+                document.getElementById("days-passed").innerText = daysPassed; // ✅ Fixed "Days Passed"
+
+                // ✅ Send message to update UI in case popup is open
+                chrome.runtime.sendMessage({ action: "updateStreakCoins", streak, coins, intake: todayIntake, daysPassed }, (response) => {
+                    if (chrome.runtime.lastError) {
+                        console.warn("No receiver for updateStreakCoins message:", chrome.runtime.lastError.message);
+                    } else {
+                        console.log("📩 Streak & coins update sent successfully:", response);
+                    }
+                });
+            });
+        }
+    });
+}
+
+// Helper function to get yesterday's date
+function getYesterdayDate() {
+    let yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return yesterday.toLocaleDateString();
+}
+
 
 
