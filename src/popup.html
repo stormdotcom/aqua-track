@@ -110,7 +110,10 @@
                 <p id="intake-for-date" class="text-2xl font-bold text-blue-600">0 mL</p>
             </div>
         </div>
-
+        <div id="celebration" class="hidden celebration-container">
+            🎉 <span id="celebration-text">Congratulations! You reached your goal! </span> 🎉
+            <div id="balloons-container"></div>
+        </div>
         <!-- Settings Link -->
         <div class="text-center mt-6">
             <a href="settings.html"
@@ -128,3 +131,70 @@
 </body>
 
 </html>
+
+<style>
+    .hidden {
+        display: none;
+    }
+    
+    @keyframes borderAnimation {
+        0% { border-color: #faafaf; } /* Red */
+        25% { border-color: #c6fdc6; } /* Green */
+        50% { border-color: #9494ee; } /* Blue */
+        75% { border-color: #f3a2f3; } /* Magenta */
+        100% { border-color: #ff9090; } /* Back to Red */
+    }
+    
+    .celebration-container {
+        text-align: center;
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #ffcc00;
+        padding: 20px;
+        background: #1e40af;
+        border-radius: 10px;
+        border: 5px solid #e97575; /* Default color */
+        box-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Running Border Effect */
+    .celebration-border {
+        animation: borderAnimation 2s infinite linear;
+    }
+    /* Balloons Effect */
+    @keyframes float {
+        0% { transform: translateY(100vh) scale(0.5); opacity: 1; }
+        100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+    
+    .balloon {
+        width: 30px;
+        height: 40px;
+        background: red;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 0;
+        animation: float 4s linear infinite;
+    }
+    
+    .balloon:nth-child(2) { background: blue; animation-delay: 0.5s; }
+    .balloon:nth-child(3) { background: yellow; animation-delay: 1s; }
+    .balloon:nth-child(4) { background: green; animation-delay: 1.5s; }
+    .balloon:nth-child(5) { background: purple; animation-delay: 2s; }
+    
+    /* Stars Effect */
+    @keyframes sparkle {
+        0% { opacity: 0.2; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.3); }
+        100% { opacity: 0.2; transform: scale(1); }
+    }
+    
+    .star {
+        font-size: 20px;
+        color: #ffcc00;
+        position: absolute;
+        animation: sparkle 1s infinite;
+    }
+</style>

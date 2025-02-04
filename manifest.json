@@ -39,9 +39,9 @@
      }
    },
    "icons": {
-    "16": "src/assets/icon128.png",
-    "48": "src/assets/icon128.png",
-    "128": "src/assets/icon128.png"
+    "16": "src/assets/128.png",
+    "48": "src/assets/128.png",
+    "128": "src/assets/128.png"
   }
  }
  

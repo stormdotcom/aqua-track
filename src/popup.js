@@ -77,8 +77,12 @@ document.addEventListener("DOMContentLoaded", function () {
   function checkGoal() {
     if (totalIntake >= dailyGoal) {
       celebrationElement.classList.remove("hidden");
+      celebrationElement.classList.add("celebration-border");
+      startCelebrationEffect(); 
     } else {
       celebrationElement.classList.add("hidden");
+      celebrationElement.classList.remove("celebration-border"); // Remove animated border
+        stopCelebrationEffect();
     }
   }
 
@@ -108,8 +112,6 @@ document.addEventListener("DOMContentLoaded", function () {
         checkGoal();
       });
     }
-    if (request.action === "showAlert") {
-      alert(request.message);  
-  }
+ 
   });
 });
