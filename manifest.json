@@ -21,7 +21,9 @@
      "alarms",
      "clipboardWrite"
    ],
-
+   "host_permissions": [
+  "https://www.buymeacoffee.com/*"
+],
  
    "options_page": "src/settings.html",
  
