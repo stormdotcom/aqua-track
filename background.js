@@ -97,7 +97,7 @@ function showNotification() {
             iconUrl: chrome.runtime.getURL("src/assets/icon.png"),
             message,
             buttons: [
-                { title: unit === "mL" ? "Add 200 mL" : "Add 1 cup" }
+                { title: unit === "mL" ? "Add 200 mL" : "Add 1 cup" }, { title: "Intake Later" }
             ],
             priority: 2,
             requireInteraction: true 
@@ -131,7 +131,7 @@ function addWaterIntake() {
         let addAmount;
 
         if (unit === "mL") {
-            addAmount = 200; // Add 200 mL
+            Amount = 200; // Add 200 mL
         } else if (unit === "cups") {
             addAmount = conversionFactor; // Add 240 mL for 1 cup
         }

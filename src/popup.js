@@ -49,6 +49,7 @@ loadStoredData();
       totalIntake += unit === "cups" ? intakeAmount * conversionFactor : intakeAmount;
       saveIntake(today);
       updateTotalIntakeUI();
+      loadStoredData();
       waterAmountInput.value = ""; // Clear input
       checkGoal(); // Check if the goal is met
     }
@@ -83,7 +84,6 @@ loadStoredData();
     if (totalIntake >= dailyGoal) {
       celebrationElement.classList.remove("hidden");
       celebrationElement.classList.add("celebration-border");
-      loadStoredData();
       startCelebrationEffect(); 
     } else {
       celebrationElement.classList.add("hidden");
