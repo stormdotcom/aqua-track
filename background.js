@@ -123,27 +123,32 @@ chrome.notifications.onButtonClicked.addListener((notificationId, buttonIndex) =
 });
 
 function addWaterIntake() {
+    console.log("here");
+
     const conversionFactor = 240; // 1 cup = 240 mL
+
     chrome.storage.local.get(["unit", "waterIntakes"], (data) => {
         const unit = data.unit || "mL";
         const waterIntakes = data.waterIntakes || {};
-        const today = new Date().toLocaleDateString();
-        let addAmount;
 
+        const today = new Date().toLocaleDateString();
+        let addAmount = 0; // Ensure it's initialized
+
+        // 🔹 Fix: Assign `addAmount` correctly
         if (unit === "mL") {
-            Amount = 200; // Add 200 mL
+            addAmount = 200; // Add 200 mL
         } else if (unit === "cups") {
             addAmount = conversionFactor; // Add 240 mL for 1 cup
         }
 
+        // 🔹 Fix: Ensure `waterIntakes[today]` exists before adding
         waterIntakes[today] = (waterIntakes[today] || 0) + addAmount;
+
+        // 🔹 Save updated intake
         chrome.storage.local.set({ waterIntakes }, () => {
             console.log("Water intake updated:", waterIntakes[today]);
 
-            // Update Streak & Coins after adding water intake
-            updateStreakAndCoins();
-
-            // Send message to update the popup UI, if it's open
+            // 🔹 Send message to update popup UI
             chrome.runtime.sendMessage({ action: "updateIntake" }, (response) => {
                 if (chrome.runtime.lastError) {
                     console.warn("No receiver for updateIntake message:", chrome.runtime.lastError.message);
@@ -154,6 +159,7 @@ function addWaterIntake() {
         });
     });
 }
+
 
 function updateStreakAndCoins() {
     chrome.storage.local.get(["streak", "lastHydrationDate", "coins", "waterIntakes", "startDate"], (data) => {
